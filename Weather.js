@@ -15,6 +15,9 @@ async function run() {
   const response = await fetch(url);
   const data = await response.json();
 
+  console.log(JSON.stringify(data, null, 2));
+  process.exit(1);
+
   const now = new Date();
 
   const temp = Math.round(data.current.temperature_2m);
