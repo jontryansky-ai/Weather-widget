@@ -1,0 +1,14 @@
+name: Weather Live
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "NEW WORKFLOW"
