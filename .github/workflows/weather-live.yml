@@ -3,6 +3,9 @@ name: Weather Live
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "*/15 * * * *"
+
 permissions:
   contents: write
 
@@ -11,4 +14,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo "NEW WORKFLOW"
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run weather script
+        run: node Weather.js
+
+      - name: Commit changes
+        run: |
+          git config user.name github-actions
+          git config user.email actions@github.com
+
+          git add Weather.json
+
+          git commit -m "Update weather" || exit 0
+
+          git push
