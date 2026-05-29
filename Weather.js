@@ -8,15 +8,12 @@ async function run() {
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
     `&current=temperature_2m,precipitation,cloud_cover,uv_index` +
-    `&hourly=precipitation_probability,precipitation,time` +
+    `&hourly=precipitation_probability,precipitation` +
     `&daily=temperature_2m_max,temperature_2m_min` +
     `&timezone=auto`;
 
   const response = await fetch(url);
   const data = await response.json();
-
-  console.log(JSON.stringify(data, null, 2));
-  process.exit(1);
 
   const now = new Date();
 
