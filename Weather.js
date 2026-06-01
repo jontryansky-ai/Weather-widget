@@ -28,7 +28,6 @@ async function run() {
   icon = "⛈";
 } else if (precipNow > 0.1) {
   icon = "💦";
-}
   } else if (cloud > 85) {
     icon = "☁️";
   } else if (cloud > 40) {
