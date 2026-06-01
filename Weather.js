@@ -9,7 +9,7 @@ async function run() {
     `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
     `&current=temperature_2m,precipitation,cloud_cover,uv_index` +
     `&hourly=precipitation_probability,precipitation` +
-    `&daily=temperature_2m_max,temperature_2m_min` +
+    `&daily=temperature_2m_max,temperature_2m_min, sunset` +
     `&timezone=auto`;
 
   const response = await fetch(url);
@@ -24,10 +24,11 @@ async function run() {
 
   let icon = "☀️";
 
-  if (precipNow > 1) {
-    icon = "⛈";
-  } else if (precipNow > 0.1) {
-    icon = "🌧";
+  if (precipNow > 3) {
+  icon = "⛈";
+} else if (precipNow > 0.1) {
+  icon = "💦";
+}
   } else if (cloud > 85) {
     icon = "☁️";
   } else if (cloud > 40) {
@@ -108,6 +109,34 @@ async function run() {
     dynamic = `UV${uv}`;
   }
 
+  // SUNSET
+if (!dynamic) {
+
+  const sunset =
+    new Date(data.daily.sunset[0]);
+
+  const minsToSunset =
+    (sunset - now) / 60000;
+
+  if (
+    minsToSunset > 0 &&
+    minsToSunset <= 120
+  ) {
+
+    const hh =
+      sunset.getHours()
+        .toString()
+        .padStart(2, "0");
+
+    const mm =
+      sunset.getMinutes()
+        .toString()
+        .padStart(2, "0");
+
+    dynamic = `🌘${hh}:${mm}`;
+  }
+}
+ 
   // HIGH / LOW
   if (!dynamic) {
 
@@ -125,16 +154,21 @@ async function run() {
   }
 
   const display =
-    `${icon} ${temp}° ${dynamic}`;
+  `${icon} ${temp}° ${dynamic}`;
 
-  fs.writeFileSync(
-    "Weather.json",
-    JSON.stringify(
-      { display },
-      null,
-      2
-    )
-  );
+const output = {
+  display,
+  updated: new Date().toISOString()
+};
+
+fs.writeFileSync(
+  "Weather.json",
+  JSON.stringify(
+    output,
+    null,
+    2
+  )
+);
 
   console.log(display);
 }
