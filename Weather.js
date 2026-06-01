@@ -164,7 +164,10 @@ const output = {
 fs.writeFileSync(
   "Weather.json",
   JSON.stringify(
-    output,
+    {
+      display,
+      updated: new Date().toISOString()
+    },
     null,
     2
   )
